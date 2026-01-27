@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: hitalent_postgres
+    environment:
+      POSTGRES_DB: chatdb
+      POSTGRES_USER: chatuser
+      POSTGRES_PASSWORD: chatpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hitalent_app
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: postgres
+      DB_USER: chatuser
+      DB_PASSWORD: chatpass
+      DB_NAME: chatdb
+      DB_PORT: 5432
+
+volumes:
+  pgdata:
